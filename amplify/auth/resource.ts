@@ -1,11 +1,15 @@
-import { defineAuth } from '@aws-amplify/backend';
+import { referenceAuth, secret } from "@aws-amplify/backend";
 
-/**
- * Define and configure your auth resource
- * @see https://docs.amplify.aws/gen2/build-a-backend/auth
- */
-export const auth = defineAuth({
-  loginWith: {
-    email: true,
-  },
+const userPoolId = secret("COGNITO_USER_POOL_ID").toString();
+const identityPoolId = secret("COGNITO_IDENTITY_POOL_ID").toString();
+const userPoolClientId = secret("COGNITO_USER_POOL_CLIENT_ID").toString();
+const authRoleArn = secret("COGNITO_AUTH_ROLE_ARN").toString();
+const unauthRoleArn = secret("COGNITO_UNAUTH_ROLE_ARN").toString();
+
+export const auth = referenceAuth({
+	userPoolId,
+	identityPoolId,
+	userPoolClientId,
+	authRoleArn,
+	unauthRoleArn,
 });
