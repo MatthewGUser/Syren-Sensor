@@ -1,15 +1,10 @@
-import { referenceAuth, secret } from "@aws-amplify/backend";
-
-const userPoolId = secret("COGNITO_USER_POOL_ID").toString();
-const identityPoolId = secret("COGNITO_IDENTITY_POOL_ID").toString();
-const userPoolClientId = secret("COGNITO_USER_POOL_CLIENT_ID").toString();
-const authRoleArn = secret("COGNITO_AUTH_ROLE_ARN").toString();
-const unauthRoleArn = secret("COGNITO_UNAUTH_ROLE_ARN").toString();
+import { referenceAuth } from "@aws-amplify/backend";
 
 export const auth = referenceAuth({
-	userPoolId,
-	identityPoolId,
-	userPoolClientId,
-	authRoleArn,
-	unauthRoleArn,
+	userPoolId: "us-east-1_XlaObV4IZ",
+	identityPoolId: "us-east-1:bdc6206d-a44b-420c-bb3d-d24b2f24dd72",
+	userPoolClientId: "4f2vad1m9feimkd77f3auj3fdd",
+	authRoleArn: "arn:aws:iam::767398061569:role/service-role/syren-identity-pool",
+	unauthRoleArn:
+		"arn:aws:iam::767398061569:role/service-role/syren-identity-guest",
 });
