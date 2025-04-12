@@ -1,40 +1,30 @@
-import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
+import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 
 const client = generateClient<Schema>();
-
-function App() {
-	const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+const App = () => {
+	const [data, setData] = useState<any>(null);
 
 	useEffect(() => {
-		client.models.Todo.observeQuery().subscribe({
-			next: (data) => setTodos([...data.items]),
-		});
+		const fetchData = async () => {
+			try {
+				const result = await client.User.query.all();
+				setData(result);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+
+		fetchData();
 	}, []);
 
-	function createTodo() {
-		client.models.Todo.create({ content: window.prompt("Todo content") });
-	}
-
 	return (
-		<main>
-			<h1>My todos</h1>
-			<button onClick={createTodo}>+ new</button>
-			<ul>
-				{todos.map((todo) => (
-					<li key={todo.id}>{todo.content}</li>
-				))}
-			</ul>
-			<div>
-				🥳 App successfully hosted. Try creating a new todo.
-				<br />
-				<a href='https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates'>
-					Review next step of this tutorial.
-				</a>
-			</div>
-		</main>
+		<div className='App'>
+			<h1>Data from Amplify</h1>
+			{data ? <pre>{JSON.stringify(data, null, 2)}</pre> : <p>Loading...</p>}
+		</div>
 	);
-}
+};
 
 export default App;
