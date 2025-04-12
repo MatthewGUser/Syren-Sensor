@@ -1,11 +1,10 @@
-import { defineAuth } from '@aws-amplify/backend';
+import { referenceAuth } from "@aws-amplify/backend";
 
-/**
- * Define and configure your auth resource
- * @see https://docs.amplify.aws/gen2/build-a-backend/auth
- */
-export const auth = defineAuth({
-  loginWith: {
-    email: true,
-  },
+export const auth = referenceAuth({
+	userPoolId: "us-east-1_XlaObV4IZ",
+	identityPoolId: "us-east-1:bdc6206d-a44b-420c-bb3d-d24b2f24dd72",
+	userPoolClientId: "4f2vad1m9feimkd77f3auj3fdd",
+	authRoleArn: "arn:aws:iam::767398061569:role/service-role/syren-identity-pool",
+	unauthRoleArn:
+		"arn:aws:iam::767398061569:role/service-role/syren-identity-guest",
 });
