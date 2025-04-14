@@ -1,10 +1,29 @@
 import { referenceAuth } from "@aws-amplify/backend";
 
 export const auth = referenceAuth({
-	userPoolId: "us-east-1_XlaObV4IZ",
-	identityPoolId: "us-east-1:bdc6206d-a44b-420c-bb3d-d24b2f24dd72",
-	authRoleArn: "arn:aws:iam::767398061569:role/service-role/syren-identity-pool",
+	userPoolId:
+		process.env.USER_POOL_ID?.toString() ??
+		(() => {
+			throw new Error("USER_POOL_ID is not defined");
+		})(),
+	identityPoolId:
+		process.env.IDENTITY_POOL_ID?.toString() ??
+		(() => {
+			throw new Error("IDENTITY_POOL_ID is not defined");
+		})(),
+	authRoleArn:
+		process.env.AUTH_ROLE_ARN?.toString() ??
+		(() => {
+			throw new Error("AUTH_ROLE_ARN is not defined");
+		})(),
 	unauthRoleArn:
-		"arn:aws:iam::767398061569:role/service-role/syren-identity-guest",
-	userPoolClientId: "4f2vad1m9feimkd77f3auj3fdd",
+		process.env.UNAUTH_ROLE_ARN?.toString() ??
+		(() => {
+			throw new Error("UNAUTH_ROLE_ARN is not defined");
+		})(),
+	userPoolClientId:
+		process.env.USER_POOL_CLIENT_ID?.toString() ??
+		(() => {
+			throw new Error("USER_POOL_CLIENT_ID is not defined");
+		})(),
 });
