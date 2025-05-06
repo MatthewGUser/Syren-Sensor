@@ -1,40 +1,32 @@
-import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
 
-const client = generateClient<Schema>();
+import { Route, Routes, Navigate } from 'react-router-dom'
+//import type { Schema } from "../amplify/data/resource";
+//import { generateClient } from "aws-amplify/data";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import PatientDashboard from "./components/PatientDashboard";
+import Settings from "./components/Settings";
+import NavBar from './components/NavBar';
+
+//const client = generateClient<Schema>();
 
 function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-
-  useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
-  }
-
-  return (
-    <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
-      </div>
-    </main>
-  );
+	// const { user  } = useAuthenticator();
+	
+	// if (!user) {
+	// 	return null
+	// }
+	return (
+		<div className="flex flex-col min-h-screen">
+			<div className='flex-grow'>
+				<Routes>
+					<Route path="/" element={<Navigate to="/dashboard" replace />} />
+					<Route path="/dashboard" element ={<PatientDashboard/>}/>
+					<Route path="/settings" element ={<Settings/>}/>
+				</Routes>
+			</div>
+			<NavBar/>
+		</div>
+	);
 }
 
 export default App;
