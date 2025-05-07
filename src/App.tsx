@@ -2,7 +2,7 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
 //import type { Schema } from "../amplify/data/resource";
 //import { generateClient } from "aws-amplify/data";
-import { useAuthenticator } from "@aws-amplify/ui-react";
+// import { useAuthenticator } from "@aws-amplify/ui-react";
 import PatientDashboard from "./components/PatientDashboard";
 import Settings from "./components/Settings";
 import NavBar from './components/NavBar';
