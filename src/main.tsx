@@ -5,7 +5,7 @@ import "./styles.css";
 // import { Authenticator } from "@aws-amplify/ui-react";
 //import { Amplify } from "aws-amplify";
 //import outputs from "../amplify_outputs.json";
-import "@aws-amplify/ui-react/styles.css";
+// import "@aws-amplify/ui-react/styles.css";
 import { BrowserRouter } from "react-router-dom";
 
 //Amplify.configure(outputs);

@@ -1,63 +1,67 @@
-import { useEffect, useState } from "react";
-import { User } from "../models/User";
+// import { useEffect, useState } from "react";
+// import { User } from "../models/User";
+import { useSettingsContext } from "../context/SettingsContext";
 
 export default function PatientDashboard() {
-  const [patient, setPatient] = useState<User>({
-    userId: 0,
-    name: {
-      firstName: "",
-      lastName: ""
-    },
-    age: 0,
-    gender: "",
-    height: "",
-    weight: "",
-    phoneNumber: "",
-    primaryAddress: {
-      buildingNumber: "",
-      street: "",
-      aptUnitNumber: "",
-      zipCode: "",
-      city: "",
-      state: "",
-      country: ""
-    },
-  });
+  const { settingsState } = useSettingsContext();
+  // const [patient, setPatient] = useState<User>({
+  //   userId: 0,
+  //   name: {
+  //     firstName: "",
+  //     lastName: ""
+  //   },
+  //   age: 0,
+  //   gender: "",
+  //   height: "",
+  //   weight: "",
+  //   phoneNumber: "",
+  //   primaryAddress: {
+  //     buildingNumber: "",
+  //     street: "",
+  //     aptUnitNumber: "",
+  //     zipCode: "",
+  //     city: "",
+  //     state: "",
+  //     country: ""
+  //   },
+  // });
 
-  const [vitals, setVitals] = useState({
-    skinTemp: 0,
-    pulse: 0,
-    spO2: 0
-  });
+  // const [vitals, setVitals] = useState({
+  //   vitalsId: 0,
+  //   skinTemp: 0,
+  //   pulse: 0,
+  //   spO2: 0
+  // });
 
-  useEffect(() => {
-    setPatient({
-      userId: Date.now(),
-      name: {
-        firstName: "John",
-        lastName: "Doe"
-      },
-      age: 40,
-      gender: "male",
-      height: "72in",
-      weight: "190 lbs.",
-      phoneNumber: "123-456-7890",
-      primaryAddress: {
-        buildingNumber: "100",
-        street: "main st.",
-        aptUnitNumber: "PH4",
-        zipCode: "12345",
-        city: "Schenectady",
-        state: "NY",
-        country: "United States"
-      }
-    });
-    setVitals({
-      skinTemp: 98,
-      pulse: 70,
-      spO2: 100
-    });
-  }, []);
+  // useEffect(() => {
+  //   setPatient({
+  //     userId: Date.now(),
+  //     name: {
+  //       firstName: "John",
+  //       lastName: "Doe"
+  //     },
+  //     age: 40,
+  //     gender: "male",
+  //     height: "72in",
+  //     weight: "190 lbs.",
+  //     phoneNumber: "123-456-7890",
+  //     primaryAddress: {
+  //       buildingNumber: "100",
+  //       street: "main st.",
+  //       aptUnitNumber: "PH4",
+  //       zipCode: "12345",
+  //       city: "Schenectady",
+  //       state: "NY",
+  //       country: "United States"
+  //     }
+  //   });
+  //   setVitals({
+  //     vitalsId: 1,
+  //     skinTemp: 98,
+  //     pulse: 70,
+  //     spO2: 100
+  //   });
+  // }, []);
 
   return (
     <div className="flex-1 bg-gray-800 min-h-screen overflow-y-auto px-4 py-6">
@@ -69,30 +73,30 @@ export default function PatientDashboard() {
 
           <p className="text-white mb-3 capitalize">
             <span className="font-semibold">Name:</span>{" "}
-            <span className="font-normal">{`${patient.name.firstName} ${patient.name.lastName}`}</span>
+            <span className="font-normal">{`${settingsState.user.name.firstName} ${settingsState.user.name.lastName}`}</span>
           </p>
           <p className="text-white mb-3 capitalize">
             <span className="font-semibold">Age:</span>{" "}
-            <span className="font-normal">{patient.age}</span>
+            <span className="font-normal">{settingsState.user.age}</span>
           </p>
           <p className="text-white mb-3 capitalize">
             <span className="font-semibold">Gender:</span>{" "}
-            <span className="font-normal">{patient.gender}</span>
+            <span className="font-normal">{settingsState.user.gender}</span>
           </p>
           <p className="text-white mb-3 capitalize">
             <span className="font-semibold">Height:</span>{" "}
-            <span className="font-normal">{patient.height}</span>
+            <span className="font-normal">{settingsState.user.height}</span>
           </p>
           <p className="text-white mb-3 capitalize">
             <span className="font-semibold">Weight:</span>{" "}
-            <span className="font-normal">{patient.weight}</span>
+            <span className="font-normal">{settingsState.user.weight}</span>
           </p>
 
           <h3 className="text-white text-lg font-semibold mt-6 mb-4">Patient Vitals:</h3>
-          {Object.entries(vitals).map(([key, value]) => (
+          {Object.entries(settingsState.vitals).filter(([key])=> key !== 'vitalsId').map(([key, value]) => (
             <p key={key} className="text-white mb-3 capitalize">
               <span className="font-semibold">{key}:</span>
-              <span className="font-normal">{value}</span>
+              <span className="font-normal">{Number(value)}</span>
             </p>
           ))}
         </div>
