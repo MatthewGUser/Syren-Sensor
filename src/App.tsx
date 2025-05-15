@@ -1,8 +1,10 @@
 
 import { Route, Routes, Navigate } from 'react-router-dom'
+import { fetchAuthSession } from 'aws-amplify/auth';
 //import type { Schema } from "../amplify/data/resource";
 //import { generateClient } from "aws-amplify/data";
-// import { useAuthenticator } from "@aws-amplify/ui-react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { useEffect } from 'react';
 import PatientDashboard from "./components/PatientDashboard";
 import Settings from "./components/Settings";
 import NavBar from './components/NavBar';
@@ -10,7 +12,10 @@ import { SettingsProvider, useSettingsContext } from './context/SettingsContext'
 //const client = generateClient<Schema>();
 
 function EMSModal() {
+
 	const { settingsState, handleCallEMS, handleCancelEMS } = useSettingsContext();
+
+	
 
 	if (!settingsState.emsModalOpen) return null;
 
@@ -54,7 +59,17 @@ function App() {
 	// if (!user) {
 	// 	return null
 	// }
-	
+	const { user, signOut } = useAuthenticator();
+	async function getAuthToken() {
+		const session = await fetchAuthSession();
+		const idToken = session.tokens?.idToken?.toString();
+		const accessToken = session.tokens?.accessToken?.toString();
+		return { idToken, accessToken };
+  }
+  	useEffect(() => {
+		if (!user) return;
+	}, [user])
+
 	return (
 		<SettingsProvider>
 			<div className="flex flex-col min-h-screen">
@@ -67,6 +82,7 @@ function App() {
 				</div>
 				<NavBar/>
 				<EMSModal/>
+				<button onClick={signOut}>Sign Out</button>
 			</div>
 		</SettingsProvider>
 	);
