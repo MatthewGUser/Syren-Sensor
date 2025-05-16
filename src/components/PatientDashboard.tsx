@@ -4,8 +4,12 @@ import { useSettingsContext } from "../context/SettingsContext";
 import syrenLogo from '../assets/syrensensor2.png'
 import VitalsCard from "./VitalsCard";
 
+
 export default function PatientDashboard() {
   const { settingsState } = useSettingsContext();
+
+
+
   // const [patient, setPatient] = useState<User>({
   //   userId: 0,
   //   name: {

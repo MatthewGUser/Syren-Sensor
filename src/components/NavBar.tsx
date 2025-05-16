@@ -36,7 +36,7 @@ export default function NavBar() {
           {/* ✅ Replace local modal with global EMS modal trigger */}
           <button
             onClick={() =>
-              setSettingsState((prev) => ({
+              setSettingsState((prev: any) => ({
                 ...prev,
                 emsModalOpen: true,
                 emsTriggeredManually: true,

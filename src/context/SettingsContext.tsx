@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { useLocation } from "react-router-dom";
 import { User } from "../models/User";
 import { Vitals } from "../models/Vitals";
+import { Auth } from 'aws-amplify'
 
 // Define the initial structure of the settings state
 interface SettingsState {
@@ -15,6 +16,7 @@ interface SettingsState {
 
 // Initialize the default state structure
 const defaultState: SettingsState = {
+
   user: {
     userId: 0,
     name: { firstName: "", lastName: "" },
@@ -99,6 +101,26 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
     }));
   };
 
+    const fetchUserData = async () => {
+    try {
+      const session = await Auth.currentSession();
+      const token = session.getIdToken().getJwtToken();
+      const res = await fetch(
+        "https://your-api-id.execute-api.us-east-1.amazonaws.com/dev/users/123",
+        {
+          method: "GET",
+          headers: { Authorization: token },
+        }
+      );
+      if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
+      const data: User = await res.json();
+      console.log("got user payload", data);
+      updateUser(data);
+    } catch (err) {
+      console.error("fetchUserData error:", err);
+    }
+  };
+
   const handleCallEMS = () => {
     setSettingsState((prev) => ({ ...prev, emsModalOpen: false,
       emsTriggeredManually: false,
@@ -114,7 +136,14 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
         setEmsTimeoutId(null);
     }
   };
+
+    useEffect(() => {
+    fetchUserData();
+  }, []); // <-- empty deps: only on first load
+
+  
   const location = useLocation()
+
 
   useEffect(()=> {
     const { skinTemp, pulse, spO2 } = settingsState.vitals;
@@ -140,6 +169,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
             }
         };
     }, [settingsState.vitals, location.pathname]);
+
 
   return (
     <SettingsContext.Provider
