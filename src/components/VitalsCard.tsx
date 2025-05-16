@@ -53,7 +53,7 @@ export default function VitalsCard() {
   }
 
   return (
-    <div className="bg-black rounded-lg p-4 m-6 shadow-md text-white">
+    <div className=" w-full bg-black rounded-lg py-6 mt-6 px-8 shadow-md text-white">
       <h2 className="text-lg font-semibold mb-2">Latest Vitals</h2>
       <p>Heart Rate: {latestSnapshot.heartRate}</p>
       <p>Oxygen Level: {latestSnapshot.oxygenLevel}</p>
