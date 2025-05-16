@@ -53,7 +53,7 @@ export default function NavBar() {
           {/* ✅ Sign Out Button */}
           <button
             onClick={signOut}
-            className="flex items-center space-x-2 text-white bg-gray-700 hover:bg-gray-800 px-4 py-2 rounded-lg"
+            className="flex items-center space-x-2 text-white bg-[#2b2b2c] px-4 py-2 rounded-lg"
             aria-label="Sign out of account"
           >
             <IoLogOutOutline size={24} aria-hidden="true" />
