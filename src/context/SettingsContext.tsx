@@ -2,16 +2,18 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { useLocation } from "react-router-dom";
 import { User } from "../models/User";
 import { Vitals } from "../models/Vitals";
-import { Auth } from 'aws-amplify'
+import { Auth, fetchAuthSession } from '@aws-amplify/auth'
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
 // Define the initial structure of the settings state
 interface SettingsState {
-  user: User;
-  emergencyContact: any;
-  bluetoothDevice: any;
-  vitals: Vitals;
+  user: any;
+  // emergencyContact: any;
+  // bluetoothDevice: any;
+  vitals: any;
   emsModalOpen: boolean;
   emsTriggeredManually: boolean;
+  idToken: string | undefined
 }
 
 // Initialize the default state structure
@@ -33,29 +35,31 @@ const defaultState: SettingsState = {
       city: "",
       state: "",
       country: "",
-    },
-  },
-  emergencyContact: {
+        },
+    emergencyContact: {
     contactId: 0,
-    userId: 0,
     name: { firstName: "", lastName: "" },
     phoneNumber: "",
     relationship: "",
   },
-  bluetoothDevice: {
-    deviceId: 0,
-    serialNumber: "",
-    deviceMake: "",
-    deviceModel: "",
-  },
+    },
+
+
   vitals: {
     vitalsId: 0,
     skinTemp: 98,
     pulse: 70,
     spO2: 100,
+      bluetoothDevice: {
+    deviceId: 0,
+    serialNumber: "",
+    deviceMake: "",
+    deviceModel: "",
+  },
   },
   emsModalOpen: false,
   emsTriggeredManually: false,
+  idToken: ''
 };
 
 // Create context with default value
@@ -101,20 +105,34 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
     }));
   };
 
+    async function getAuthToken() {
+      const session = await Auth.currentSession();
+      const newToken = session.getIdToken().getJwtToken();
+      setSettingsState((prevState: SettingsState) => ({
+        ...prevState, idToken: newToken
+      }))
+    }
+    const { user: authenticatedUser } = useAuthenticator()
     const fetchUserData = async () => {
     try {
-      const session = await Auth.currentSession();
-      const token = session.getIdToken().getJwtToken();
-      const res = await fetch(
-        "https://your-api-id.execute-api.us-east-1.amazonaws.com/dev/users/123",
+      
+      if (!authenticatedUser) return;
+      const idToken = await getAuthToken();
+      console.log('idToken', idToken)
+      const url =  `https://lesiun05ul.execute-api.us-east-1.amazonaws.com/demo/getLatestVitals?userID=${encodeURIComponent(authenticatedUser.signInDetails?.loginId ?? "")}`;
+      const res = await fetch(url,
         {
           method: "GET",
-          headers: { Authorization: token },
-        }
-      );
-      if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
-      const data: User = await res.json();
-      console.log("got user payload", data);
+          headers: { 
+            Authorization: `Bearer ${idToken}` 
+          },
+        });
+      if (!res.ok){
+          const errorText = await res.text();
+          throw new Error(`HTTP ${res.status}: ${errorText}`);
+      }
+      const data: any = await res.json();
+      console.log("got user payload", data); 
       updateUser(data);
     } catch (err) {
       console.error("fetchUserData error:", err);
@@ -141,7 +159,7 @@ export const SettingsProvider = ({ children }: SettingsProviderProps) => {
     fetchUserData();
   }, []); // <-- empty deps: only on first load
 
-  
+
   const location = useLocation()
 
 
